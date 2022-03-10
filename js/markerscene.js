@@ -32,7 +32,7 @@ export default class MarkerScene extends Component {
     setMarker() {
         ViroARTrackingTargets.createTargets({
             "card": {
-                source: require('./res/card.JPG'),
+                source: require('./res/card.png'),
                 orientation: "Up",
                 physicalWidth: 1
             },

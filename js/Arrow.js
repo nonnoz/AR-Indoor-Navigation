@@ -1,43 +1,99 @@
-// 'use strict';
+'use strict';
 
-// import React, { Component } from 'react';
+import React, { Component } from 'react';
 
-// import {
-//     Text,
-//     View,
-//     Animated,
-//     StyleSheet
-// } from 'react-native';
+import { StyleSheet } from 'react-native';
 
-// import ArrowCircleLeftIcon from '@mui/icons-material/ArrowCircleLeft';
-// import ArrowCircleRightIcon from '@mui/icons-material/ArrowCircleRight';
-// import ArrowCircleUpIcon from '@mui/icons-material/ArrowCircleUp';
+import {
+    ViroARScene,
+    ViroText,
+    ViroConstants,
+    ViroBox,
+    ViroMaterials,
+    ViroARPlaneSelector,
+    ViroNode,
+    ViroAnimations,
+    ViroQuad,
+    Viro3DObject,
+    ViroAmbientLight,
+} from 'react-viro';
 
+export default class Test extends Component {
 
-// export default class Arrow extends Component {
-//     constructor(props) {
-//         super(props);
+    constructor() {
+        super();
 
-//         this.direction = props.dir;
-//     }
+        // Set initial state here
+        this.state = {
+            // text: "Initializing AR..."
+        };
+    }
 
+    render() {
+        return (
+            <ViroARScene>
+                <ViroAmbientLight
+                    color="#ffffff"
+                />
+                <Viro3DObject
+                    source={require("./res/arrow/Arrow5.fbx")}
+                    resources={[
+                        // require('./res/arrow/Arrow5.mtl'),
+                        // require('./res/arrow/Map__55_Normal_Bump.tga'),
 
-//     render() {
+                        require('./res/arrow/Arrow5Albedo.png'),
+                        require('./res/arrow/Arrow5AO.png'),
+                        require('./res/arrow/Arrow5Metal.png'),
+                        require('./res/arrow/Arrow5Normal.png'),
+                        require('./res/arrow/Arrow5Rough.png'),
+                        require('./res/arrow/Arrow5UVW.png')
+                    ]}
+                    highAccuracyEvents={true}
+                    position={[0, -15, -50]}
+                    scale={[1, 1, 1]}
+                    rotation={[45, 0, 0]}
+                    type="VRX"
+                    transformBehaviors={["billboard"]}
+                    animation={{name: 'rotate', run: true, loop: true}}
+                />
 
-//         if (this.direction == 'forward') {
-//             return (<ArrowCircleUpIcon />);
-//         }
-//         else if (this.direction == 'left') {
-//             return (
-//                 <ArrowCircleLeftIcon />
-//             );
-//         }
-//         else {
-//             return (
-//                 <ArrowCircleRightIcon />
-//             );
-//         }
+            </ViroARScene>
+        );
+    }
+}
 
-//     }
+var styles = StyleSheet.create({
+    helloWorldTextStyle: {
+        fontFamily: 'Arial',
+        fontSize: 30,
+        color: '#ffffff',
+        textAlignVertical: 'center',
+        textAlign: 'center',
+    },
+});
 
-// }
+ViroMaterials.createMaterials({
+    grid: {
+        diffuseTexture: require('./res/material.png'),
+    },
+});
+
+ViroAnimations.registerAnimations({
+    rotate: {
+        properties: {
+            rotateY: "+=90"
+        },
+        duration: 250, //.25 seconds
+    },
+});
+
+ViroAnimations.registerAnimations({
+    rightArrow: {
+        properties: {
+            rotateY: "+=90"
+        },
+        duration: 500,
+    },
+});
+
+module.exports = Test;

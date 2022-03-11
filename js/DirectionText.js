@@ -116,6 +116,8 @@ var DirectionText = createReactClass({
             position={[0, .15, 0]}
             scale={[.3, .3, .3]}
             type="VRX"
+            animation={{name: "rotate", run: true, loop: true}}
+
             lightReceivingBitMask={5}
             shadowCastingBitMask={4}
             transformBehaviors={['billboardY']}

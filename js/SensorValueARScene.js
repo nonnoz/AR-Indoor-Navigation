@@ -26,9 +26,9 @@ export default class SensorValueARScene extends Component {
     }
 
     update(data) {
-        let posX = data.position[0].toFixed(2);
-        let posY = data.position[1].toFixed(2);
-        let posZ = data.position[2].toFixed(2);
+        let posX = data.position[0].toFixed(3);
+        let posY = data.position[1].toFixed(3);
+        let posZ = data.position[2].toFixed(3);
 
         let rotX = data.rotation[0].toFixed(0);
         let rotY = data.rotation[1].toFixed(0);

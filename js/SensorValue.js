@@ -6,10 +6,9 @@ import {
     Text,
     View,
     Animated,
-    StyleSheet
+    StyleSheet,
+    Image,
 } from 'react-native';
-
-// import { Arrow } from './Arrow';
 
 
 import {
@@ -28,7 +27,6 @@ export default class SensorValue extends Component {
             rot: [0, 0, 0],
             forward: [0, 0, 0],
             up: [0, 0, 0],
-            // arrow: 0,
         };
 
         this.setPosition = this.setPosition.bind(this);
@@ -40,7 +38,9 @@ export default class SensorValue extends Component {
         this.getValueDisplay = this.getValueDisplay.bind(this);
         this.getRotValue = this.getRotValue.bind(this);
         this.getPosValue = this.getPosValue.bind(this);
-        // this.getArrow = this.getArrow.bind(this);
+        
+        this.getMapDisplay = this.getMapDisplay.bind(this);
+
     }
 
     render() {
@@ -48,29 +48,13 @@ export default class SensorValue extends Component {
             <View style={styles.outerContainer}>
                 {this.getARScene()}
 
-                {this.getValueDisplay()}
-                {/* {this.getRotValue()} */}
-                {/* {this.getArrow()} */}
+                {this.getMapDisplay()}
 
             </View>
         );
     }
 
-    getArrow() {
-
-        let overlayStyle = {
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-        }
-        return (
-            <Animated.View style={{ ...overlayStyle, opacity: 1 }}>
-
-                <Arrow dir='left' />
-            </Animated.View>
-        );
-    }
-
+    
     getValueDisplay() {
 
         let overlayStyle = {
@@ -81,7 +65,7 @@ export default class SensorValue extends Component {
         return (
             <Animated.View style={{ ...overlayStyle, opacity: 1 }}>
                 {this.getPosValue()}
-                {this.getRotValue()}
+                {/* {this.getRotValue()} */}
             </Animated.View>
         );
     }
@@ -149,6 +133,23 @@ export default class SensorValue extends Component {
                 }} />
         );
 
+    }
+
+    getMapDisplay() {
+
+        let overlayStyle = {
+            position: 'absolute',
+            width: '100%',
+            height: '100%',
+        }
+        return (
+            <Animated.View style={{ ...overlayStyle, opacity: 1 }}>
+                <View style={styles.readyContainer}>
+                    <Image source={require('./res/map.jpg')} />
+
+                </View>
+            </Animated.View>
+        );
     }
 
     setPosition(pos) {

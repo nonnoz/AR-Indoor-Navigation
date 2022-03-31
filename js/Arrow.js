@@ -5,10 +5,8 @@ import React, { Component } from 'react';
 import { StyleSheet } from 'react-native';
 
 import {
-    ViroARScene,
     ViroText,
     ViroConstants,
-    ViroBox,
     ViroMaterials,
     ViroARPlaneSelector,
     ViroNode,
@@ -16,50 +14,71 @@ import {
     ViroQuad,
     Viro3DObject,
     ViroAmbientLight,
+    ViroSpotLight,
 } from 'react-viro';
 
-export default class Test extends Component {
+export default function Arrow(props) {
+    const {
+        pos,
+        instruction,
+        dir,
+    } = props;
 
-    constructor() {
-        super();
-
-        // Set initial state here
-        this.state = {
-            // text: "Initializing AR..."
-        };
-    }
-
-    render() {
-        return (
-            <ViroARScene>
-                <ViroAmbientLight
+    return (
+        <ViroNode position={[0, -1, -1]} dragType="FixedToWorld" onDrag={() => { }}>
+            <ViroAmbientLight
+                color="#ffffff"
+                intensity={200}
+            />
+            {/* <ViroSpotLight
+                    innerAngle={5}
+                    outerAngle={25}
+                    direction={[0, -1, 0]}
+                    position={[0, 5, 0]}
                     color="#ffffff"
-                />
-                <Viro3DObject
-                    source={require("./res/arrow/Arrow5.fbx")}
-                    resources={[
-                        // require('./res/arrow/Arrow5.mtl'),
-                        // require('./res/arrow/Map__55_Normal_Bump.tga'),
+                    castsShadow={true}
+                    shadowMapSize={2048}
+                    shadowNearZ={2}
+                    shadowFarZ={7}
+                    shadowOpacity={.7}
+                /> */}
+            <ViroText
+                text={instruction}
+                textAlign="center"
+                textAlignVertical="top"
+                color="#ff0000"
+                width={2} 
+                height={2}
+                style={
+                    {
+                        fontFamily: "Arial", fontSize: 20, fontStyle: "italic", color: "#0000FF"
+                    }
+                }
+                position={[0, 0, -5]}
+            />
+            <Viro3DObject
+                source={require("./res/arrow/Arrow5.obj")}
+                resources={[
+                    // require('./res/arrow/Arrow5.mtl'),
 
-                        require('./res/arrow/Arrow5Albedo.png'),
-                        require('./res/arrow/Arrow5AO.png'),
-                        require('./res/arrow/Arrow5Metal.png'),
-                        require('./res/arrow/Arrow5Normal.png'),
-                        require('./res/arrow/Arrow5Rough.png'),
-                        require('./res/arrow/Arrow5UVW.png')
-                    ]}
-                    highAccuracyEvents={true}
-                    position={[0, -15, -50]}
-                    scale={[1, 1, 1]}
-                    rotation={[45, 0, 0]}
-                    type="VRX"
-                    transformBehaviors={["billboard"]}
-                    animation={{name: 'rotate', run: true, loop: true}}
-                />
-
-            </ViroARScene>
-        );
-    }
+                    // require('./res/arrow/Arrow5Albedo.png'),
+                    // require('./res/arrow/Arrow5AO.png'),
+                    // require('./res/arrow/Arrow5Metal.png'),
+                    // require('./res/arrow/Arrow5Normal.png'),
+                    // require('./res/arrow/Arrow5Rough.png'),
+                    // require('./res/arrow/Arrow5UVW.png')
+                ]}
+                highAccuracyEvents={true}
+                position={pos}
+                // scale={[30, 30, 30]}
+                scale={[1, 1, 1]}
+                // rotationPivot={[0, 0, -90]}
+                type="OBJ"
+                transformBehaviors={["billboard"]}
+                animation={{ name: 'pointing', run: true, loop: true }}
+            />
+        </ViroNode>
+    );
 }
 
 var styles = StyleSheet.create({
@@ -76,7 +95,16 @@ ViroMaterials.createMaterials({
     grid: {
         diffuseTexture: require('./res/material.png'),
     },
+    green_mtl: {
+        diffuseColor: "#0B6623",
+        lightingModel: "PBR"
+    },
+    white_mtl: {
+        diffuseColor: "#FFFFFF",
+        lightingModel: "PBR"
+    }
 });
+
 
 ViroAnimations.registerAnimations({
     rotate: {
@@ -85,15 +113,20 @@ ViroAnimations.registerAnimations({
         },
         duration: 250, //.25 seconds
     },
-});
-
-ViroAnimations.registerAnimations({
-    rightArrow: {
+    moveRight: {
         properties: {
-            rotateY: "+=90"
+            positionX: "+=1"
         },
-        duration: 500,
+        duration: 250
     },
+    moveLeft: {
+        properties: {
+            positionX: "-=1",
+        },
+        duration: 250
+    },
+    pointing: [
+        ["moveRight", "moveLeft"]
+    ]
 });
 
-module.exports = Test;

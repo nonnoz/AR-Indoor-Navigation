@@ -38,8 +38,7 @@ export default class SensorValue extends Component {
         this.getValueDisplay = this.getValueDisplay.bind(this);
         this.getRotValue = this.getRotValue.bind(this);
         this.getPosValue = this.getPosValue.bind(this);
-        
-        this.getMapDisplay = this.getMapDisplay.bind(this);
+
 
     }
 
@@ -48,7 +47,7 @@ export default class SensorValue extends Component {
             <View style={styles.outerContainer}>
                 {this.getARScene()}
 
-                {this.getMapDisplay()}
+                {this.getValueDisplay()}
 
             </View>
         );
@@ -133,23 +132,6 @@ export default class SensorValue extends Component {
                 }} />
         );
 
-    }
-
-    getMapDisplay() {
-
-        let overlayStyle = {
-            position: 'absolute',
-            width: '100%',
-            height: '100%',
-        }
-        return (
-            <Animated.View style={{ ...overlayStyle, opacity: 1 }}>
-                <View style={styles.readyContainer}>
-                    <Image source={require('./res/map.jpg')} />
-
-                </View>
-            </Animated.View>
-        );
     }
 
     setPosition(pos) {

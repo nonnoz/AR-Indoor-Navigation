@@ -34,9 +34,7 @@ export default class MapView extends Component {
             
                 <View style={styles.outerContainer}>
                     {this.getARScene()}
-                    {/* <ViroARScene> */}
                     {this.getMapDisplay()}
-                    {/* </ViroARScene> */}
                 </View>
             
         );
@@ -69,7 +67,7 @@ export default class MapView extends Component {
                 // apiKey={apiKey}
                 // viroAppProps={viroAppProps}
                 initialScene={{
-                    scene: require('./SensorValueARScene.js')
+                    scene: require('./MapViewARScene.js')
 
                 }} />
         );

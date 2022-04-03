@@ -12,10 +12,10 @@ import {
     ViroAnimations,
     ViroText,
 
-    
+
 } from 'react-viro';
 
-import Arrow from './Arrow';
+import ArrowWithText from './ArrowWithText';
 
 export default class Object extends Component {
 
@@ -30,39 +30,41 @@ export default class Object extends Component {
 
 
     render() {
-        const posList = [[0, -15, -50],[0,-25,-50]];
-        const dirList = ["right", "left"]
-        const instructionList = ["Turn left","success"];
+        const posList = [
+            [0, 0, -100],
+            [50, 0, 0],
+            [0, 0, 50],
+            [-50, 0, 0]
+        ];
+        // const dirList = ["right", "left"]
+        const instructionList = ["Turn right", "Turn right", "Turn right", "Turn right"];
+        const rotList = [0, -90, -180, 90];
+        const aniIdx = [0, 1, 0, 1];
+
 
         var arrows = [];
-        for (var i = 0; i < posList.length; i++){
+        for (var i = 0; i < posList.length; i++) {
             var props = {
                 pos: posList[i],
                 instruction: instructionList[i],
-                dir: dirList[i],
-            }; 
-            arrows.push(<Arrow {...props}/>)
+                key: i,
+                rot: rotList[i],
+                aniIdx: aniIdx[i],
+            };
+            arrows.push(<ArrowWithText {...props} />)
         }
 
 
         return (
             <ViroARScene>
                 {arrows}
+
             </ViroARScene>
         );
-       
+
     }
 }
 
-var styles = StyleSheet.create({
-    helloWorldTextStyle: {
-        fontFamily: 'Arial',
-        fontSize: 30,
-        color: '#ffffff',
-        textAlignVertical: 'center',
-        textAlign: 'center',
-    },
-});
 
 // ViroMaterials.createMaterials({
 //     grid: {
@@ -78,28 +80,7 @@ var styles = StyleSheet.create({
 //     }
 // });
 
-ViroAnimations.registerAnimations({
-    rotate: {
-        properties: {
-            rotateY: "+=90"
-        },
-        duration: 250, //.25 seconds
-    },
-    moveRight: {
-        properties: {
-            positionX: "+=1"
-        },
-        duration: 250
-    },
-    moveLeft: {
-        properties: {
-            positionX: "-=1",
-        },
-        duration: 250
-    },
-    pointing: [
-        ["moveRight", "moveLeft"]
-    ]
-});
+
+
 
 module.exports = Object;

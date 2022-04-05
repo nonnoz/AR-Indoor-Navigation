@@ -30,26 +30,27 @@ export default class VirtualCar extends Component {
 
   constructor(props) {
     super(props)
-    
+
     this.state = {
       // initial state here
-      showInstructions : true,
-      instructionOpacity : new Animated.Value(1),
-      carControlsOpacity : new Animated.Value(0),
-      isReady : false,
-      isOverPlane : false,
-      left : false,
-      up : false,
-      right : false,
-      down : false,
-      touchLocation : "0,0",
-      leftRightRatio : 0,
-      shouldResetCar : false,
-      isRecording : false,
-      shouldPlayMedia : true, // whether or not the AR session should play media (probably because its hidden)
-      hours : '00',
-      minutes : '00',
-      seconds : '00',
+      showInstructions: true,
+      instructionOpacity: new Animated.Value(1),
+      carControlsOpacity: new Animated.Value(0),
+      isReady: false,
+      isOverPlane: false,
+      left: false,
+      up: false,
+      right: false,
+      down: false,
+      touchLocation: "0,0",
+      leftRightRatio: 0,
+      shouldResetCar: false,
+      isRecording: false,
+      shouldPlayMedia: true, // whether or not the AR session should play media (probably because its hidden)
+      hours: '00',
+      minutes: '00',
+      seconds: '00',
+      start: false,
     }
 
     // bind functions here
@@ -77,6 +78,11 @@ export default class VirtualCar extends Component {
     this.joystickMove = this.joystickMove.bind(this);
     this.joystickEnd = this.joystickEnd.bind(this);
     this.setJoystickProps = this.setJoystickProps.bind(this);
+
+    this.getStartButton = this.getStartButton.bind(this);
+    this.setStartState = this.setStartState.bind(this);
+    this.startGuide = this.startGuide.bind(this);
+    this.turnRight = this.turnRight.bind(this);
   }
 
   componentDidMount() {
@@ -90,11 +96,11 @@ export default class VirtualCar extends Component {
   render() {
 
     let text = "" + (this.state.left ? "Left," : "") + (this.state.up ? "Up," : "")
-               + (this.state.right ? "Right," : "") + (this.state.down ? "Down," : "")
+      + (this.state.right ? "Right," : "") + (this.state.down ? "Down," : "")
 
     return (
       <View style={styles.outerContainer}>
-        
+
         {this.getViroARView()}
 
         {this.getCarControls()}
@@ -110,15 +116,15 @@ export default class VirtualCar extends Component {
   getViroARView() {
     // use viroAppProps to pass in "changing/dynamic" values, passProps is "not" dynamic.
     let viroAppProps = {
-      direction : (this.state.left ? 1 : 0) + (this.state.up ? 2 : 0) + (this.state.right ? 4 : 0) + (this.state.down ? 8 : 0),
-      leftRightRatio : this.state.leftRightRatio,
-      shouldResetCar : this.state.shouldResetCar,
-      isReady : this.state.isReady,
-      setIsOverPlane : this.setIsOverPlane,
+      direction: (this.state.left ? 1 : 0) + (this.state.up ? 2 : 0) + (this.state.right ? 4 : 0) + (this.state.down ? 8 : 0),
+      leftRightRatio: this.state.leftRightRatio,
+      shouldResetCar: this.state.shouldResetCar,
+      isReady: this.state.isReady,
+      setIsOverPlane: this.setIsOverPlane,
     }
     return (
       <ViroARSceneNavigator
-        ref={(ref)=>{this.arNavigator = ref}}
+        ref={(ref) => { this.arNavigator = ref }}
         apiKey={apiKey}
         viroAppProps={viroAppProps}
         initialScene={{
@@ -126,8 +132,8 @@ export default class VirtualCar extends Component {
           passProps: {
             onARInitialized: this.onARInitialized,
             onPosterFound: this.onPosterFound,
-            onExperienceFinished : this.onExperienceFinished,
-            onARSceneCreated : this.onARSceneCreated,
+            onExperienceFinished: this.onExperienceFinished,
+            onARSceneCreated: this.onARSceneCreated,
           },
         }} />
     );
@@ -136,38 +142,96 @@ export default class VirtualCar extends Component {
   getCarControls() {
 
     return (
-      <Animated.View style={{position : 'absolute', width : '100%',
-                             height : '100%', opacity : this.state.carControlsOpacity}}>
+      <Animated.View style={{
+        position: 'absolute', width: '100%',
+        height: '100%', opacity: this.state.carControlsOpacity
+      }}>
         {/* These are the controls to drive the car */}
-        {this.getDrivingPedals()}
+        {/* {this.getDrivingPedals()} */}
+        {this.getStartButton()}
+
         {this.getResetButton()}
         {this.getJoystick()}
       </Animated.View>
     )
   }
 
+  getStartButton() {
+    return (
+      <TouchableOpacity
+        style={styles.startButton}
+        onPress={this.startGuide}
+        // activeOpacity={0.6} 
+        opacity={this.state.start ? 0 : 1}
+      >
+        <Image style={styles.startImage} source={require('./res/car/start_btn.png')} />
+      </TouchableOpacity>
+    )
+  }
+
+  startGuide() {
+    // this.setStartState();
+    // this.getPressDown('up')
+    setTimeout(this.getPressDown('up'), 10);
+
+    setTimeout(this.getPressUp('up'), 30000);
+
+    setTimeout(() => {
+      this.turnRight()
+    }, 2000);
+
+    setTimeout(() => {
+      this.turnRight()
+    }, 4000);
+
+    setTimeout(() => {
+      this.turnRight()
+    }, 6000);
+
+  }
+
+  turnRight() {
+
+    this.setState({
+      left: false,
+      right: true,
+      leftRightRatio: 0.4,
+    })
+
+    setTimeout(() => {
+      this.setState({
+        left: false,
+        right: false,
+        leftRightRatio: 0,
+      })
+    }, 1500);
+  }
+
   getDrivingPedals() {
+    // this.getPressDown('up');
+    // setTimeout(this.getPressDown('up'), 3000);
+
     return (
       <View style={styles.drivingButtonsContainer} >
 
         <View style={styles.drivingButton} >
-        {/* reverse button */}
+          {/* reverse button */}
           <Image style={styles.pedalImage} opacity={this.state.down ? 0 : 1}
             source={require('./res/car/pedal_reverse.png')} />
-          <Image style={styles.pedalImage} opacity={!this.state.down ? 0 : 1} 
-            source={require('./res/car/pedal_reverse_press.png')}/>
+          <Image style={styles.pedalImage} opacity={!this.state.down ? 0 : 1}
+            source={require('./res/car/pedal_reverse_press.png')} />
           <View style={styles.pedalTouchArea} onTouchStart={this.getPressDown('down')}
-          onTouchEnd={this.getPressUp('down')} />
+            onTouchEnd={this.getPressUp('down')} />
         </View>
 
         <View style={styles.drivingButton} >
-        {/* go forward button */}
+          {/* go forward button */}
           <Image style={styles.pedalImage} opacity={this.state.up ? 0 : 1}
             source={require('./res/car/pedal_accel.png')} />
-          <Image style={styles.pedalImage} opacity={!this.state.up ? 0 : 1} 
-            source={require('./res/car/pedal_accel_press.png')}/>
+          <Image style={styles.pedalImage} opacity={!this.state.up ? 0 : 1}
+            source={require('./res/car/pedal_accel_press.png')} />
           <View style={styles.pedalTouchArea} onTouchStart={this.getPressDown('up')}
-          onTouchEnd={this.getPressUp('up')} />
+            onTouchEnd={this.getPressUp('up')} />
         </View>
 
       </View>
@@ -181,8 +245,8 @@ export default class VirtualCar extends Component {
     let joystickButtonStyle = {
       height: 130,
       width: 200,
-      resizeMode : 'contain',
-      transform: [{rotate : rotation}]
+      resizeMode: 'contain',
+      transform: [{ rotate: rotation }]
     }
 
     /*
@@ -191,9 +255,9 @@ export default class VirtualCar extends Component {
      */
     return (
       <View style={styles.joystickContainer} >
-        <Image style={joystickButtonStyle} source={require('./res/car/steering_wheel.png')}/>
-        <View style={styles.joystickTouchArea} onTouchStart={this.joystickStart} 
-        onTouchMove={this.joystickMove} onTouchEnd={this.joystickEnd} />
+        <Image style={joystickButtonStyle} source={require('./res/car/steering_wheel.png')} />
+        <View style={styles.joystickTouchArea} onTouchStart={this.joystickStart}
+          onTouchMove={this.joystickMove} onTouchEnd={this.joystickEnd} />
       </View>
     )
   }
@@ -204,26 +268,28 @@ export default class VirtualCar extends Component {
         style={styles.resetButton}
         onPress={this.resetCar}
         activeOpacity={0.6} >
-        <Image style={styles.resetImage} source={require('./res/car/icon_refresh.png')}/>
+        <Image style={styles.resetImage} source={require('./res/car/icon_refresh.png')} />
       </TouchableOpacity>
     )
   }
 
   resetCar() {
     this.setState({
-      shouldResetCar : true,
+      shouldResetCar: true,
     })
 
     // reset the flag 1 second later.
-    setTimeout(()=>{
+    setTimeout(() => {
       this.setState({
-        shouldResetCar : false,
+        shouldResetCar: false,
       })
     }, 1000)
+
+    // this.getPressUp('up');
   }
 
   getPressDown(key) {
-    return ()=>{
+    return () => {
       let dict = {}
       dict[key] = true
       this.setState(dict)
@@ -231,11 +297,17 @@ export default class VirtualCar extends Component {
   }
 
   getPressUp(key) {
-    return ()=>{
+    return () => {
       let dict = {}
       dict[key] = false
       this.setState(dict)
     }
+  }
+
+  setStartState() {
+    this.setState({
+      start: true
+    });
   }
 
   joystickStart(evt) {
@@ -245,15 +317,15 @@ export default class VirtualCar extends Component {
   joystickMove(evt) {
     this.setJoystickProps(evt);
     this.setState({
-      touchLocation : "" + evt.nativeEvent.locationX.toFixed(2) + ", " + evt.nativeEvent.locationY.toFixed(2) + ", " + evt.nativeEvent.pageX.toFixed(2) + ", " + evt.nativeEvent.pageY.toFixed(2)
+      touchLocation: "" + evt.nativeEvent.locationX.toFixed(2) + ", " + evt.nativeEvent.locationY.toFixed(2) + ", " + evt.nativeEvent.pageX.toFixed(2) + ", " + evt.nativeEvent.pageY.toFixed(2)
     })
   }
 
   joystickEnd(evt) {
     this.setState({
-      left : false,
-      right : false,
-      leftRightRatio : 0,
+      left: false,
+      right: false,
+      leftRightRatio: 0,
     })
   }
 
@@ -303,9 +375,9 @@ export default class VirtualCar extends Component {
     }
 
     this.setState({
-      left : leftValue,
-      right : rightValue,
-      leftRightRatio : Math.max(Math.min(ratio, 1), 0), // bound ratio to 0 -> 1
+      left: leftValue,
+      right: rightValue,
+      leftRightRatio: Math.max(Math.min(ratio, 1), 0), // bound ratio to 0 -> 1
     })
   }
 
@@ -316,26 +388,26 @@ export default class VirtualCar extends Component {
       let text = this.state.isOverPlane ? ' ' : 'Finding the floor...'
 
       let overlayStyle = {
-        position : 'absolute',
-        width : '100%',
-        height : '100%',
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
       }
 
       let readyButton = {
         height: 60,
         width: 130,
-        marginTop : 10,
-        backgroundColor:'#292930B3',
+        marginTop: 10,
+        backgroundColor: '#292930B3',
         borderRadius: 10,
         borderWidth: 2,
         borderColor: '#fff',
-        justifyContent : 'center',
-        alignItems : 'center',
-        opacity : this.state.isOverPlane ? 1 : .5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        opacity: this.state.isOverPlane ? 1 : .5,
       }
 
       return (
-        <Animated.View style={{...overlayStyle, opacity : this.state.instructionOpacity}}>
+        <Animated.View style={{ ...overlayStyle, opacity: this.state.instructionOpacity }}>
           <View style={styles.readyContainer}>
             <Text style={styles.instructionText}>
               {text}
@@ -363,21 +435,21 @@ export default class VirtualCar extends Component {
     }
 
     Animated.timing(this.state.instructionOpacity, {
-      toValue : 0,
-      duration : 1000,
-      easing : Easing.linear,
-    }).start(()=>{
+      toValue: 0,
+      duration: 1000,
+      easing: Easing.linear,
+    }).start(() => {
       this.setState({
-        showInstructions : false,
-        isReady : true,
+        showInstructions: false,
+        isReady: true,
       })
     })
 
-    setTimeout(()=>{
+    setTimeout(() => {
       Animated.timing(this.state.carControlsOpacity, {
-        toValue : 1,
-        duration : 500,
-        easing : Easing.linear,
+        toValue: 1,
+        duration: 500,
+        easing: Easing.linear,
       }).start()
     }, 1000)
   }
@@ -389,21 +461,21 @@ export default class VirtualCar extends Component {
     }
 
     var instructionContainer = {
-      position : 'absolute',
-      backgroundColor : '#000000B3',
-      flexDirection : 'column',
-      width : '100%',
-      height : 100,
-      justifyContent : 'center',
-      top : 0,
-      left : 0,
-      paddingTop : paddingTop,
+      position: 'absolute',
+      backgroundColor: '#000000B3',
+      flexDirection: 'column',
+      width: '100%',
+      height: 100,
+      justifyContent: 'center',
+      top: 0,
+      left: 0,
+      paddingTop: paddingTop,
     }
 
     let instructions = "Scan the ground and tap Place to begin."
 
     return (
-      <Animated.View style={{...instructionContainer, opacity : this.state.instructionOpacity}}>
+      <Animated.View style={{ ...instructionContainer, opacity: this.state.instructionOpacity }}>
         <Text style={styles.instructionText}>
           {instructions}
         </Text>
@@ -415,7 +487,7 @@ export default class VirtualCar extends Component {
   setIsOverPlane(isOverPlane) {
     if (this.state.isOverPlane != isOverPlane) {
       this.setState({
-        isOverPlane : isOverPlane,
+        isOverPlane: isOverPlane,
       })
     }
   }
@@ -432,151 +504,163 @@ let paddingTop = PlatformUtils.isIPhoneX() ? PlatformUtils.iOSTopPadding + extra
 let paddingBottom = PlatformUtils.isIPhoneX() ? PlatformUtils.iPhoneXBottomPadding : 0;
 
 var styles = StyleSheet.create({
-  outerContainer : {
-    flex : 1,
-    flexDirection : 'column',
+  outerContainer: {
+    flex: 1,
+    flexDirection: 'column',
   },
-  titleText : {
-    color : 'white',
-    fontSize : 20,
-    fontWeight : '400',
-    textAlign : 'center',
+  titleText: {
+    color: 'white',
+    fontSize: 20,
+    fontWeight: '400',
+    textAlign: 'center',
     // fontFamily : 'BebasNeue-Regular',
   },
-  instructionText : {
-    color : 'white',
-    fontSize : 18,
-    textAlign : 'center',
+  instructionText: {
+    color: 'white',
+    fontSize: 18,
+    textAlign: 'center',
     // fontFamily : 'BebasNeue-Regular',
   },
-  readyContainer : {
-    position : 'absolute',
-    height : 170,
-    width : '100%',
-    bottom : 0,
-    left : 0,
-    justifyContent : 'center',
-    alignItems : 'center',
+  readyContainer: {
+    position: 'absolute',
+    height: 170,
+    width: '100%',
+    bottom: 0,
+    left: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  exitButton : {
+  exitButton: {
     position: 'absolute',
     // Use padding vs "top"/"left" so that the entire zone is tappable
-    paddingLeft : 15,
-    paddingTop : 27 + paddingTop,
+    paddingLeft: 15,
+    paddingTop: 27 + paddingTop,
   },
-  exitImage : {
+  exitImage: {
     height: 21,
     width: 21,
-    resizeMode : 'stretch',
+    resizeMode: 'stretch',
   },
-  joystickContainer : {
-    position : 'absolute',
+  joystickContainer: {
+    position: 'absolute',
     height: 130,
     width: 200,
     marginBottom: 10,
-    marginLeft : 5,
-    bottom : 10, 
-    left : 10,
+    marginLeft: 5,
+    bottom: 10,
+    left: 10,
   },
-  joystickTouchArea : {
-    position : 'absolute',
+  joystickTouchArea: {
+    position: 'absolute',
     height: 130,
     width: 200,
     // Android needs a background color on views or it won't be touchable
-    backgroundColor : '#ffffff00',
+    backgroundColor: '#ffffff00',
   },
-  resetButton : {
-    position : 'absolute',
-    width : 30,
-    height : 30,
-    right : 15,
-    top : 24 + paddingTop,
+  resetButton: {
+    position: 'absolute',
+    width: 30,
+    height: 30,
+    right: 15,
+    top: 24 + paddingTop,
   },
-  resetImage : {
-    width : 30,
-    height : 30,
-    resizeMode : 'contain',
+  resetImage: {
+    width: 30,
+    height: 30,
+    resizeMode: 'contain',
   },
-  directionText : {
-    position : 'absolute',
-    top : 50,
-    color:'#fff',
-    textAlign:'center',
-    fontSize : 20
+  startButton: {
+    position: 'absolute',
+    width: 100,
+    height: 100,
+    right: 15,
+    bottom: 100,
   },
-  drivingButtonsContainer : {
-    position : 'absolute',
-    flexDirection : 'row',
-    bottom : 25,
-    right : 10,
-    width : 150,
+  startImage: {
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
+  },
+  directionText: {
+    position: 'absolute',
+    top: 50,
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 20
+  },
+  drivingButtonsContainer: {
+    position: 'absolute',
+    flexDirection: 'row',
+    bottom: 25,
+    right: 10,
+    width: 150,
     justifyContent: 'space-between',
-    alignItems : 'center',
+    alignItems: 'center',
   },
-  drivingButton : {
+  drivingButton: {
     height: 70,
     width: 70,
     marginTop: 10,
     marginBottom: 10,
-    marginLeft : 5,
-    marginRight : 5,
+    marginLeft: 5,
+    marginRight: 5,
   },
-  pedalImage : {
-    position : 'absolute',
-    height : 70,
-    width : 70,
+  pedalImage: {
+    position: 'absolute',
+    height: 70,
+    width: 70,
   },
-  pedalTouchArea : {
-    position : 'absolute',
-    height : 70,
-    width : 70,
+  pedalTouchArea: {
+    position: 'absolute',
+    height: 70,
+    width: 70,
     // Android needs a background color on views or it won't be touchable
-    backgroundColor : '#ffffff00',
+    backgroundColor: '#ffffff00',
   },
   buttonText: {
-    color:'#fff',
-    textAlign:'center',
-    fontSize : 20
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 20
   },
-  touchText : {
-    position : 'absolute',
-    top : 10,
-    left : 0,
-    color:'#fff',
-    textAlign:'center',
-    fontSize : 20
+  touchText: {
+    position: 'absolute',
+    top: 10,
+    left: 0,
+    color: '#fff',
+    textAlign: 'center',
+    fontSize: 20
   },
-  attributionOverlay : {
-    position : 'absolute',
-    width : '100%',
-    height : '100%',
-    backgroundColor : 'black',
-    justifyContent : 'center',
-    alignItems : 'center',
+  attributionOverlay: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'black',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
-  attributionMovieLogoContainer : {
-    position : 'absolute',
-    top : 100,
-    flexDirection : 'column',
+  attributionMovieLogoContainer: {
+    position: 'absolute',
+    top: 100,
+    flexDirection: 'column',
   },
-  attributionMovieLogo : {
-    width : 300,
-    height : 75,
-    resizeMode : 'contain',
-    marginBottom : 15,
+  attributionMovieLogo: {
+    width: 300,
+    height: 75,
+    resizeMode: 'contain',
+    marginBottom: 15,
   },
-  attributionLoadingContainer : {
-    flex : 1,
-    flexDirection : 'column',
-    justifyContent : 'center',
+  attributionLoadingContainer: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
   },
-  attributionViroLogo : {
-    position : 'absolute',
-    bottom : 30,
+  attributionViroLogo: {
+    position: 'absolute',
+    bottom: 30,
     flexDirection: 'column',
     alignItems: 'center',
     width: '100%',
     height: 60,
-    resizeMode : 'contain',
+    resizeMode: 'contain',
   },
 });

@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import {
   ViroARScene,
@@ -45,8 +45,8 @@ const wheelCircumference = 1 * carScale;
 const maxLeanRotation = 10;
 var currentAcceleration = 0; // m/s/s
 var currentVelocity = 0; // m/s
-var currentPosition = [0,0,0];
-var currentDirection = [0,0,-1];
+var currentPosition = [0, 0, 0];
+var currentDirection = [0, 0, -1];
 var currentRotation = 0; // this is a rotation about the Y in radians...
 var currentLeanRotation = 0;
 var wheelTurnRotation = 0; // the rotation of the wheel due to a turn (Y-ais)
@@ -64,17 +64,17 @@ export default class VirtualCarScene extends Component {
 
     // Set initial state here
     this.state = {
-      text : "Initializing AR...",
-      refreshFlag : false,
-      modelWorldRotation : [0,0,0],
+      text: "Initializing AR...",
+      refreshFlag: false,
+      modelWorldRotation: [0, 0, 0],
       displayHitReticle: false,
-      foundPlane : false,
-      planeReticleLocation: [0,0,0],
-      shouldBillboard : true,
-      isReady : false,
-      lastFoundPlaneLocation : [0,0,0],
-      volumeLevel : .3,
-      showCone : false,
+      foundPlane: false,
+      planeReticleLocation: [0, 0, 0],
+      shouldBillboard: true,
+      isReady: false,
+      lastFoundPlaneLocation: [0, 0, 0],
+      volumeLevel: .3,
+      showCone: false,
     };
 
     // bind 'this' to functions
@@ -106,15 +106,15 @@ export default class VirtualCarScene extends Component {
       // sure you aren't. This'll cause a yellow box warning, but you can throw it in 
       // a setTimeout for 100ms before setting isReady to true to prevent that too.
       this.setState({
-        isReady : true
+        isReady: true
       })
 
-      setTimeout(()=>{this._setInitialCarDirection()}, 400);
+      setTimeout(() => { this._setInitialCarDirection() }, 400);
     }
-    
+
     let resetValue = this.props.arSceneNavigator.viroAppProps.shouldResetCar;
     if (resetValue && shouldResetCarValue != resetValue) {
-      setTimeout(()=>{this._resetCar()}, 50);
+      setTimeout(() => { this._resetCar() }, 50);
     }
     shouldResetCarValue = resetValue;
 
@@ -122,10 +122,14 @@ export default class VirtualCarScene extends Component {
 
     let environmentLightSource = require('./res/car/learner_park_1k.hdr');
 
+        // we should pause the acceleration sound if we're not ready OR we're not either driving forward or backwards (2 & 8 bitmask)
+        let shouldPauseAccelSound = !this.state.isReady || !(this.props.arSceneNavigator.viroAppProps.direction & 10)
+        let shouldPauseIdleSound = !this.state.isReady || !shouldPauseAccelSound
+
 
     return (
-      <ViroARScene ref={(scene)=>{this.scene = scene}} onCameraARHitTest={onCameraARHitTestCallback} onTrackingUpdated={this._onInitialized}
-        physicsWorld={{gravity : [0, -5, 0]}}>
+      <ViroARScene ref={(scene) => { this.scene = scene }} onCameraARHitTest={onCameraARHitTestCallback} onTrackingUpdated={this._onInitialized}
+        physicsWorld={{ gravity: [0, -5, 0] }}>
 
         <ViroLightingEnvironment source={environmentLightSource} />
 
@@ -133,9 +137,9 @@ export default class VirtualCarScene extends Component {
 
         {this._getCarModel()}
 
-        <ViroSound source={require('./res/car_ambient.mp3')} paused={!this.state.isReady} loop={true} />
-        <ViroSound source={require('./res/car_drive.mp3')} paused={shouldPauseAccelSound} loop={true} />
-        <ViroSound source={require('./res/car_idle.mp3')} paused={shouldPauseIdleSound} loop={true} volume={this.state.volumeLevel} />
+        <ViroSound source={require('./res/car/car_ambient.mp3')} paused={!this.state.isReady} loop={true} />
+        <ViroSound source={require('./res/car/car_drive.mp3')} paused={shouldPauseAccelSound} loop={true} />
+        <ViroSound source={require('./res/car/car_idle.mp3')} paused={shouldPauseIdleSound} loop={true} volume={this.state.volumeLevel} />
 
 
       </ViroARScene>
@@ -144,7 +148,7 @@ export default class VirtualCarScene extends Component {
 
   _setInitialCarDirection() {
     if (this.car) {
-      this.car.getTransformAsync().then((retDict)=>{
+      this.car.getTransformAsync().then((retDict) => {
         let rotation = retDict.rotation;
         let absX = Math.abs(rotation[0]);
         let absZ = Math.abs(rotation[2]);
@@ -159,10 +163,10 @@ export default class VirtualCarScene extends Component {
         yRotation = yRotation;
 
         this.setState({
-          modelWorldRotation : [0, yRotation, 0],
-          shouldBillboard : false,
-        }, ()=>{
-          this.timer = setInterval(()=>{
+          modelWorldRotation: [0, yRotation, 0],
+          shouldBillboard: false,
+        }, () => {
+          this.timer = setInterval(() => {
             this._computeNewLocation();
           }, intervalTime)
         });
@@ -178,7 +182,7 @@ export default class VirtualCarScene extends Component {
     return (
       <ViroNode transformBehaviors={"billboardY"} position={this.state.planeReticleLocation}
         scale={[.5, .5, .5]} >
-        <ViroImage rotation={[-90, 0, 0]} visible={this.state.foundPlane} source={require('./res/car/tracking_diffuse_2.png')}/>
+        <ViroImage rotation={[-90, 0, 0]} visible={this.state.foundPlane} source={require('./res/car/tracking_diffuse_2.png')} />
         <ViroImage rotation={[-90, 0, 0]} visible={!this.state.foundPlane} source={require('./res/car/tracking_diffuse.png')} />
       </ViroNode>
     )
@@ -186,23 +190,23 @@ export default class VirtualCarScene extends Component {
 
   _getCarModel() {
 
-    let position = this.state.isReady ? this.state.lastFoundPlaneLocation : [0 ,20, 0];
+    let position = this.state.isReady ? this.state.lastFoundPlaneLocation : [0, 20, 0];
 
     var transformBehaviors = this.state.shouldBillboard ? "billboardY" : [];
 
     return (
       <ViroNode position={position} rotation={this.state.modelWorldRotation} transformBehaviors={transformBehaviors}>
-        <ViroNode ref={(car)=>{this.car = car}}
-          scale={[carScale,carScale,carScale]} >
+        <ViroNode ref={(car) => { this.car = car }}
+          scale={[carScale, carScale, carScale]} >
 
-          <ViroAmbientLight ref={(light)=>{this.ambientLight = light}} color={'#f5f8e0'}
+          <ViroAmbientLight ref={(light) => { this.ambientLight = light }} color={'#f5f8e0'}
             intensity={200} />
 
-          <ViroQuad width={5.691} height={5.691} materials={["dropShadow"]} rotation={[-90,0,0]}/>
+          <ViroQuad width={5.691} height={5.691} materials={["dropShadow"]} rotation={[-90, 0, 0]} />
 
           <Viro3DObject
-            ref={(car)=>{this.carRotationNode = car}}
-            position={[0,0,0]}
+            ref={(car) => { this.carRotationNode = car }}
+            position={[0, 0, 0]}
             source={require('./res/car/car_body.vrx')}
             type='VRX'
             resources={[
@@ -213,9 +217,9 @@ export default class VirtualCarScene extends Component {
             ]} />
 
           {/* Front left - need 2 containers, 1 for the side-to-side rotation, 1 for spin*/}
-          <ViroNode ref={(wheel)=>{this.frontLeftWheelContainer = wheel}}
+          <ViroNode ref={(wheel) => { this.frontLeftWheelContainer = wheel }}
             position={[-.610, .363, -1.336]} >
-            <ViroNode ref={(wheel)=>{this.frontLeftWheel = wheel}} >
+            <ViroNode ref={(wheel) => { this.frontLeftWheel = wheel }} >
               <Viro3DObject
                 source={require('./res/car/car_wheels.vrx')}
                 type='VRX'
@@ -225,14 +229,14 @@ export default class VirtualCarScene extends Component {
                   require('./res/car/wheels_Metallic.jpg'),
                   require('./res/car/wheels_Roughness.jpg'),
                   require('./res/car/wheels_Normal_OpenGL.jpg'),
-                ]}/>
+                ]} />
             </ViroNode>
           </ViroNode>
 
           {/* Front right - need 2 containers, 1 for the side-to-side rotation, 1 for spin*/}
-          <ViroNode ref={(wheel)=>{this.frontRightWheelContainer = wheel}}
+          <ViroNode ref={(wheel) => { this.frontRightWheelContainer = wheel }}
             position={[.610, .363, -1.336]} >
-            <ViroNode ref={(wheel)=>{this.frontRightWheel = wheel}} >
+            <ViroNode ref={(wheel) => { this.frontRightWheel = wheel }} >
               <Viro3DObject
                 source={require('./res/car/car_wheels.vrx')}
                 type='VRX'
@@ -241,12 +245,12 @@ export default class VirtualCarScene extends Component {
                   require('./res/car/wheels_Metallic.jpg'),
                   require('./res/car/wheels_Roughness.jpg'),
                   require('./res/car/wheels_Normal_OpenGL.jpg'),
-                ]}/>
+                ]} />
             </ViroNode>
           </ViroNode>
 
           {/* Rear left */}
-          <ViroNode ref={(wheel)=>{this.rearLeftWheel = wheel}}
+          <ViroNode ref={(wheel) => { this.rearLeftWheel = wheel }}
             position={[-.610, .363, 1.355]} >
             <Viro3DObject
               source={require('./res/car/car_wheels.vrx')}
@@ -257,11 +261,11 @@ export default class VirtualCarScene extends Component {
                 require('./res/car/wheels_Metallic.jpg'),
                 require('./res/car/wheels_Roughness.jpg'),
                 require('./res/car/wheels_Normal_OpenGL.jpg'),
-              ]}/>
+              ]} />
           </ViroNode>
 
           {/* Rear right */}
-          <ViroNode ref={(wheel)=>{this.rearRightWheel = wheel}}
+          <ViroNode ref={(wheel) => { this.rearRightWheel = wheel }}
             position={[.610, .363, 1.355]} >
             <Viro3DObject
               source={require('./res/car/car_wheels.vrx')}
@@ -271,7 +275,7 @@ export default class VirtualCarScene extends Component {
                 require('./res/car/wheels_Metallic.jpg'),
                 require('./res/car/wheels_Roughness.jpg'),
                 require('./res/car/wheels_Normal_OpenGL.jpg'),
-              ]}/>
+              ]} />
           </ViroNode>
 
         </ViroNode>
@@ -282,7 +286,7 @@ export default class VirtualCarScene extends Component {
   _onInitialized(state, reason) {
     if (state == ViroConstants.TRACKING_NORMAL) {
       this.setState({
-        text : "Hello World!"
+        text: "Hello World!"
       });
     } else if (state == ViroConstants.TRACKING_NONE) {
       // Handle loss of tracking
@@ -290,15 +294,15 @@ export default class VirtualCarScene extends Component {
   }
 
   _onCameraARHitTest(results) {
-    if(results.hitTestResults.length > 0) {
+    if (results.hitTestResults.length > 0) {
       for (var i = 0; i < results.hitTestResults.length; i++) {
         let result = results.hitTestResults[i];
         if (result.type == "ExistingPlaneUsingExtent") {
           this.setState({
-            planeReticleLocation : result.transform.position,
+            planeReticleLocation: result.transform.position,
             displayHitReticle: true,
-            foundPlane : true,
-            lastFoundPlaneLocation : result.transform.position
+            foundPlane: true,
+            lastFoundPlaneLocation: result.transform.position
           });
           this.props.arSceneNavigator.viroAppProps.setIsOverPlane(true);
           return;
@@ -307,14 +311,14 @@ export default class VirtualCarScene extends Component {
     }
 
     //else we made it here, so just forward vector with unmarked.
-    let newPosition = [results.cameraOrientation.forward[0] * 1.5, results.cameraOrientation.forward[1]* 1.5, results.cameraOrientation.forward[2]* 1.5];
+    let newPosition = [results.cameraOrientation.forward[0] * 1.5, results.cameraOrientation.forward[1] * 1.5, results.cameraOrientation.forward[2] * 1.5];
     newPosition[0] = results.cameraOrientation.position[0] + newPosition[0];
     newPosition[1] = results.cameraOrientation.position[1] + newPosition[1];
     newPosition[2] = results.cameraOrientation.position[2] + newPosition[2];
     this.setState({
-      planeReticleLocation : newPosition,
+      planeReticleLocation: newPosition,
       displayHitReticle: true,
-      foundPlane : false,
+      foundPlane: false,
     });
     this.props.arSceneNavigator.viroAppProps.setIsOverPlane(false);
   }
@@ -324,7 +328,7 @@ export default class VirtualCarScene extends Component {
     let pressedDirectionButtons = this.props.arSceneNavigator.viroAppProps.direction
 
     let computedVelocity = currentVelocity + currentAcceleration * (intervalTime / 1000)
-    
+
     if (currentAcceleration == friction) {
       // if we aren't driving (friction) then make sure we never fall below 0 speed
       currentVelocity = Math.max(computedVelocity, 0);
@@ -342,14 +346,14 @@ export default class VirtualCarScene extends Component {
     let desiredLeanRotation = 0
     // compute new directions based on the joystick
     let turnRatio = this.props.arSceneNavigator.viroAppProps.leftRightRatio
-    if ( (pressedDirectionButtons & 5) > 0) { // if left or right was pressed...
+    if ((pressedDirectionButtons & 5) > 0) { // if left or right was pressed...
       let additionalRotation = 0;
-      if ( (pressedDirectionButtons & 1) > 0 ) { // Left
+      if ((pressedDirectionButtons & 1) > 0) { // Left
         additionalRotation = - (currentVelocity * (intervalTime / 1000) / distanceToFullTurn * turnRatio) * 2 * Math.PI; // radians
         wheelTurnRotation = turnRatio * 60;
         desiredLeanRotation = - maxLeanRotation * Math.abs(currentVelocity / maxSpeed);
 
-      } else if ( (pressedDirectionButtons & 4) > 0 ) { // right
+      } else if ((pressedDirectionButtons & 4) > 0) { // right
         additionalRotation = (currentVelocity * (intervalTime / 1000) / distanceToFullTurn * turnRatio) * 2 * Math.PI; // radians
         wheelTurnRotation = turnRatio * - 60;
         desiredLeanRotation = maxLeanRotation * Math.abs(currentVelocity / maxSpeed);
@@ -379,10 +383,10 @@ export default class VirtualCarScene extends Component {
 
     // set the front wheels' turn rotation
     this.frontRightWheelContainer.setNativeProps({
-      rotation : [0, wheelTurnRotation, 0]
+      rotation: [0, wheelTurnRotation, 0]
     })
     this.frontLeftWheelContainer.setNativeProps({
-      rotation : [0, wheelTurnRotation, 0]
+      rotation: [0, wheelTurnRotation, 0]
     })
 
     if (currentVelocity != 0) {
@@ -398,7 +402,7 @@ export default class VirtualCarScene extends Component {
 
       let totalDistance = Math.sqrt(distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ);
       // we need to negativize because that's how our axis are set up
-      let additionalDriveRotation = - totalDistance / wheelCircumference * 360; 
+      let additionalDriveRotation = - totalDistance / wheelCircumference * 360;
       if (currentVelocity < 0) {
         additionalDriveRotation = - additionalDriveRotation // rotation should be backwards if we're in reverse!
       }
@@ -406,26 +410,26 @@ export default class VirtualCarScene extends Component {
 
       // set the car's rotation/position
       this.car.setNativeProps({
-        position : currentPosition,
-        rotation : [0, currentRotation * 180 / Math.PI, 0], // we're only rotating about the Y & we need to convert to degrees
+        position: currentPosition,
+        rotation: [0, currentRotation * 180 / Math.PI, 0], // we're only rotating about the Y & we need to convert to degrees
       })
 
       this.carRotationNode.setNativeProps({
-        rotation : [0, 0, currentLeanRotation]
+        rotation: [0, 0, currentLeanRotation]
       })
 
       // set all the wheel's driving rotation
       this.frontRightWheel.setNativeProps({
-        rotation : [wheelDrivingRotation, 0, 0]
+        rotation: [wheelDrivingRotation, 0, 0]
       })
       this.frontLeftWheel.setNativeProps({
-        rotation : [wheelDrivingRotation, 0, 0]
+        rotation: [wheelDrivingRotation, 0, 0]
       })
       this.rearRightWheel.setNativeProps({
-        rotation : [wheelDrivingRotation, 0, 0]
+        rotation: [wheelDrivingRotation, 0, 0]
       })
       this.rearLeftWheel.setNativeProps({
-        rotation : [wheelDrivingRotation, 0, 0]
+        rotation: [wheelDrivingRotation, 0, 0]
       })
 
     }
@@ -434,13 +438,13 @@ export default class VirtualCarScene extends Component {
   _computeAcceleration() {
     let pressedDirectionButtons = this.props.arSceneNavigator.viroAppProps.direction
 
-    if ( (pressedDirectionButtons & 2) > 0 ) {
+    if ((pressedDirectionButtons & 2) > 0) {
       if (currentVelocity < 0) {
         currentAcceleration = reverseAcceleration;
       } else {
         currentAcceleration = drivingAcceleration;
       }
-    } else if ( (pressedDirectionButtons & 8) > 0) {
+    } else if ((pressedDirectionButtons & 8) > 0) {
       if (currentVelocity > 0) {
         currentAcceleration = - reverseAcceleration;
       } else {
@@ -457,20 +461,20 @@ export default class VirtualCarScene extends Component {
   }
 
   _resetCar() {
-    this.scene.getCameraOrientationAsync().then((orientation)=>{
+    this.scene.getCameraOrientationAsync().then((orientation) => {
       let position = orientation.position
       let forward = orientation.forward
       let xzMagnitude = Math.sqrt(forward[0] * forward[0] + forward[2] * forward[2]);
 
       let distanceFromUser = 1; //meters
       let newPosition = [position[0] + (forward[0] / xzMagnitude * distanceFromUser),
-                       this.state.lastFoundPlaneLocation[1], // we want to use the current Y position!
-                       position[2] + (forward[2] / xzMagnitude * distanceFromUser)]
+      this.state.lastFoundPlaneLocation[1], // we want to use the current Y position!
+      position[2] + (forward[2] / xzMagnitude * distanceFromUser)]
 
       this._resetCarValues()
 
       this.setState({
-        lastFoundPlaneLocation : newPosition,
+        lastFoundPlaneLocation: newPosition,
       })
 
     });
@@ -479,13 +483,13 @@ export default class VirtualCarScene extends Component {
   _resetCarValues() {
     currentAcceleration = 0; // m/s/s
     currentVelocity = 0; // m/s
-    currentPosition = [0,0,0];
-    currentDirection = [0,0,-1];
+    currentPosition = [0, 0, 0];
+    currentDirection = [0, 0, -1];
     currentRotation = 0; // this is a rotation about the Y in radians...
 
     this.car.setNativeProps({
-      position : currentPosition,
-      rotation : [0,0,0],
+      position: currentPosition,
+      rotation: [0, 0, 0],
     })
   }
 }
@@ -494,10 +498,10 @@ ViroMaterials.createMaterials({
   dropShadow: {
     diffuseTexture: require('./res/car/car_shadow.png'),
     lightingModel: "Constant",
-    blendMode : 'Subtract',
+    blendMode: 'Subtract',
   },
-  invisibleMaterial : {
-    diffuseColor : '#ffffff00'
+  invisibleMaterial: {
+    diffuseColor: '#ffffff00'
   }
 });
 
@@ -507,7 +511,7 @@ var styles = StyleSheet.create({
     fontSize: 30,
     color: '#ffffff',
     textAlignVertical: 'center',
-    textAlign: 'center',  
+    textAlign: 'center',
   },
 });
 

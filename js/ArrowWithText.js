@@ -124,25 +124,25 @@ ViroAnimations.registerAnimations({
     },
     moveRight: {
         properties: {
-            positionX: "+=1.5"
+            positionX: "+=2.5"
         },
         duration: 250
     },
     moveLeft: {
         properties: {
-            positionX: "-=1.5",
+            positionX: "-=2.5",
         },
         duration: 250
     },
     moveForward: {
         properties: {
-            positionZ: "+=1.5"
+            positionZ: "+=2.5"
         },
         duration: 250
     },
     moveBack: {
         properties: {
-            positionZ: "-=1.5",
+            positionZ: "-=2.5",
         },
         duration: 250
     },

@@ -75,7 +75,6 @@ export default class MapView extends Component {
 }
 
 
-
 var styles = StyleSheet.create({
     outerContainer: {
         flex: 1,

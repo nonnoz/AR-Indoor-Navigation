@@ -59,19 +59,11 @@ var createReactClass = require('create-react-class');
 var apiKey = "API_KEY_HERE";
 
 var arScenes = {
-    'SensorValue': require('./js/SensorValue.js'),
-    // 'ARNameTag': require('./js/ARNameTag.js'),
-    // 'DirectionText': require('./js/DirectionText.js'),
-    // 'Test': require('./js/Test.js'),
-    // 'Arrow': require('./js/Arrow.js'),
-    'MapView': require('./js/MapView.js'),
-    // 'ModelTest': require('./js/ModelTest.js'),
 
     'VirtualWithMap': require('./js/VirtualWithMap.js'),
-    'VirtualCharacter': require('./js/VirtualCharacter.js'),
+    // 'VirtualCar': require('./js/VirtualCar.js'),
     'Object': require('./js/Object.js'),
-    'Arrow': require('./js/Arrow.js'),
-
+    'Arrow': require('./js/ArrowWithText.js'),
 
 }
 
@@ -81,15 +73,16 @@ var ViroCodeSamplesSceneNavigator = createReactClass({
         return (
             <ViroARSceneNavigator
                 initialScene={{
-                    scene: arScenes['SensorValue'],
+                    scene: arScenes['Object'],
                 }}
                 apiKey={apiKey} />
         );
     }
 });
 
-ViroCodeSamplesSceneNavigator = require('./js/SensorValue');
+// ViroCodeSamplesSceneNavigator = require('./js/SensorValue');
 // ViroCodeSamplesSceneNavigator = require('./js/MapView');
+ViroCodeSamplesSceneNavigator = require('./js/VirtualCar');
 
 
 module.exports = ViroCodeSamplesSceneNavigator;

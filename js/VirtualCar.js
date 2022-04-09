@@ -51,6 +51,7 @@ export default class VirtualCar extends Component {
       minutes: '00',
       seconds: '00',
       start: false,
+      showMap: false,
     }
 
     // bind functions here
@@ -67,8 +68,8 @@ export default class VirtualCar extends Component {
     this.resetCar = this.resetCar.bind(this);
 
     this.getCarControls = this.getCarControls.bind(this);
-    this.getDrivingPedals = this.getDrivingPedals.bind(this);
-    this.getJoystick = this.getJoystick.bind(this);
+    // this.getDrivingPedals = this.getDrivingPedals.bind(this);
+    // this.getJoystick = this.getJoystick.bind(this);
     this.getResetButton = this.getResetButton.bind(this);
 
     this.getPressDown = this.getPressDown.bind(this);
@@ -83,6 +84,10 @@ export default class VirtualCar extends Component {
     this.setStartState = this.setStartState.bind(this);
     this.startGuide = this.startGuide.bind(this);
     this.turnRight = this.turnRight.bind(this);
+
+    this.getMapDisplay = this.getMapDisplay.bind(this);
+    this.getMapButton = this.getMapButton.bind(this);
+    this.setMapState = this.setMapState.bind(this);
   }
 
   componentDidMount() {
@@ -109,6 +114,7 @@ export default class VirtualCar extends Component {
         {this.getReadyUI()}
         {this.getInstructions()}
 
+        {this.getMapDisplay()}
       </View>
     )
   }
@@ -139,6 +145,26 @@ export default class VirtualCar extends Component {
     );
   }
 
+  getMapDisplay() {
+
+    // if (!this.state.showMap) {
+    //   return null;
+    // }
+
+    return (
+      // <Animated.View style={{
+      //   ...overlayStyle,
+      //   opacity: this.state.showMap ? 1 : 0
+      //   // opacity: 1,
+      // }}>
+        <View style={styles.mapView}
+          opacity={this.state.showMap ? 1 : 0}>
+        <Image style={styles.mapImage} source={require('./res/map.png')} />
+      </View>
+      // </Animated.View >
+    );
+  }
+
   getCarControls() {
 
     return (
@@ -149,9 +175,10 @@ export default class VirtualCar extends Component {
         {/* These are the controls to drive the car */}
         {/* {this.getDrivingPedals()} */}
         {this.getStartButton()}
+        {this.getMapButton()}
 
         {this.getResetButton()}
-        {this.getJoystick()}
+        {/* {this.getJoystick()} */}
       </Animated.View>
     )
   }
@@ -164,30 +191,53 @@ export default class VirtualCar extends Component {
         // activeOpacity={0.6} 
         opacity={this.state.start ? 0 : 1}
       >
-        <Image style={styles.startImage} source={require('./res/car/start_btn.png')} />
+        <Image style={styles.startImage} source={require('./res/start_btn.png')} />
       </TouchableOpacity>
     )
+  }
+
+  getMapButton() {
+
+    return (
+      <TouchableOpacity
+        style={styles.mapButton}
+        onPress={this.setMapState}
+      >
+        <Image style={styles.mapBtnImage} source={require('./res/map_btn.png')} />
+      </TouchableOpacity>
+    )
+  }
+
+  setMapState() {
+    mapState = this.state.showMap;
+
+    setTimeout(() => {
+      this.setState({
+        showMap: !mapState,
+      })
+    }, 10)
   }
 
   startGuide() {
     // this.setStartState();
     // this.getPressDown('up')
+    timeList = [9400, 20000, 59000, 28000];
+
     setTimeout(this.getPressDown('up'), 10);
 
-    setTimeout(this.getPressUp('up'), 30000);
+    setTimeout(this.getPressUp('up'), timeList[0] + timeList[1] + timeList[2] + timeList[3]);
 
     setTimeout(() => {
       this.turnRight()
-    }, 2000);
+    }, timeList[0]);
 
     setTimeout(() => {
       this.turnRight()
-    }, 4000);
+    }, timeList[0] + timeList[1]);
 
     setTimeout(() => {
       this.turnRight()
-    }, 6000);
-
+    }, timeList[0] + timeList[1] + timeList[2]);
   }
 
   turnRight() {
@@ -204,63 +254,60 @@ export default class VirtualCar extends Component {
         right: false,
         leftRightRatio: 0,
       })
-    }, 1500);
+    }, 2150);
   }
 
-  getDrivingPedals() {
-    // this.getPressDown('up');
-    // setTimeout(this.getPressDown('up'), 3000);
+  // getDrivingPedals() {
+  //   return (
+  //     <View style={styles.drivingButtonsContainer} >
 
-    return (
-      <View style={styles.drivingButtonsContainer} >
+  //       <View style={styles.drivingButton} >
+  //         {/* reverse button */}
+  //         <Image style={styles.pedalImage} opacity={this.state.down ? 0 : 1}
+  //           source={require('./res/car/pedal_reverse.png')} />
+  //         <Image style={styles.pedalImage} opacity={!this.state.down ? 0 : 1}
+  //           source={require('./res/car/pedal_reverse_press.png')} />
+  //         <View style={styles.pedalTouchArea} onTouchStart={this.getPressDown('down')}
+  //           onTouchEnd={this.getPressUp('down')} />
+  //       </View>
 
-        <View style={styles.drivingButton} >
-          {/* reverse button */}
-          <Image style={styles.pedalImage} opacity={this.state.down ? 0 : 1}
-            source={require('./res/car/pedal_reverse.png')} />
-          <Image style={styles.pedalImage} opacity={!this.state.down ? 0 : 1}
-            source={require('./res/car/pedal_reverse_press.png')} />
-          <View style={styles.pedalTouchArea} onTouchStart={this.getPressDown('down')}
-            onTouchEnd={this.getPressUp('down')} />
-        </View>
+  //       <View style={styles.drivingButton} >
+  //         {/* go forward button */}
+  //         <Image style={styles.pedalImage} opacity={this.state.up ? 0 : 1}
+  //           source={require('./res/car/pedal_accel.png')} />
+  //         <Image style={styles.pedalImage} opacity={!this.state.up ? 0 : 1}
+  //           source={require('./res/car/pedal_accel_press.png')} />
+  //         <View style={styles.pedalTouchArea} onTouchStart={this.getPressDown('up')}
+  //           onTouchEnd={this.getPressUp('up')} />
+  //       </View>
 
-        <View style={styles.drivingButton} >
-          {/* go forward button */}
-          <Image style={styles.pedalImage} opacity={this.state.up ? 0 : 1}
-            source={require('./res/car/pedal_accel.png')} />
-          <Image style={styles.pedalImage} opacity={!this.state.up ? 0 : 1}
-            source={require('./res/car/pedal_accel_press.png')} />
-          <View style={styles.pedalTouchArea} onTouchStart={this.getPressDown('up')}
-            onTouchEnd={this.getPressUp('up')} />
-        </View>
+  //     </View>
+  //   )
+  // }
 
-      </View>
-    )
-  }
+  // // steering wheel
+  // getJoystick() {
+  //   let rotation = '' + (this.state.left ? '-' : '') + Math.round(this.state.leftRightRatio * 90) + 'deg'
 
-  // steering wheel
-  getJoystick() {
-    let rotation = '' + (this.state.left ? '-' : '') + Math.round(this.state.leftRightRatio * 90) + 'deg'
+  //   let joystickButtonStyle = {
+  //     height: 130,
+  //     width: 200,
+  //     resizeMode: 'contain',
+  //     transform: [{ rotate: rotation }]
+  //   }
 
-    let joystickButtonStyle = {
-      height: 130,
-      width: 200,
-      resizeMode: 'contain',
-      transform: [{ rotate: rotation }]
-    }
-
-    /*
-      This is the joystick/steering wheel component, since the image is rotating, we need
-      that "invisible" view to capture the touch events.
-     */
-    return (
-      <View style={styles.joystickContainer} >
-        <Image style={joystickButtonStyle} source={require('./res/car/steering_wheel.png')} />
-        <View style={styles.joystickTouchArea} onTouchStart={this.joystickStart}
-          onTouchMove={this.joystickMove} onTouchEnd={this.joystickEnd} />
-      </View>
-    )
-  }
+  //   /*
+  //     This is the joystick/steering wheel component, since the image is rotating, we need
+  //     that "invisible" view to capture the touch events.
+  //    */
+  //   return (
+  //     <View style={styles.joystickContainer} >
+  //       <Image style={joystickButtonStyle} source={require('./res/car/steering_wheel.png')} />
+  //       <View style={styles.joystickTouchArea} onTouchStart={this.joystickStart}
+  //         onTouchMove={this.joystickMove} onTouchEnd={this.joystickEnd} />
+  //     </View>
+  //   )
+  // }
 
   getResetButton() {
     return (
@@ -285,7 +332,6 @@ export default class VirtualCar extends Component {
       })
     }, 1000)
 
-    // this.getPressUp('up');
   }
 
   getPressDown(key) {
@@ -541,14 +587,19 @@ var styles = StyleSheet.create({
     width: 21,
     resizeMode: 'stretch',
   },
-  joystickContainer: {
+  mapView: {
     position: 'absolute',
-    height: 130,
-    width: 200,
-    marginBottom: 10,
+    height: 0,
+    width: 300,
+    marginTop: 5,
     marginLeft: 5,
-    bottom: 10,
+    // bottom: 10,
     left: 10,
+  },
+  mapImage: {
+    width: 150,
+    height: 350,
+    resizeMode: 'contain',
   },
   joystickTouchArea: {
     position: 'absolute',
@@ -581,6 +632,18 @@ var styles = StyleSheet.create({
     height: 100,
     resizeMode: 'contain',
   },
+  mapButton: {
+    position: 'absolute',
+    width: 100,
+    height: 100,
+    right: 15,
+    bottom: 15,
+  },
+  mapBtnImage: {
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
+  },
   directionText: {
     position: 'absolute',
     top: 50,
@@ -597,19 +660,19 @@ var styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  drivingButton: {
-    height: 70,
-    width: 70,
-    marginTop: 10,
-    marginBottom: 10,
-    marginLeft: 5,
-    marginRight: 5,
-  },
-  pedalImage: {
-    position: 'absolute',
-    height: 70,
-    width: 70,
-  },
+  // mapView: {
+  //   height: 70,
+  //   width: 70,
+  //   marginTop: 10,
+  //   // marginBottom: 10,
+  //   // marginLeft: 5,
+  //   // marginRight: 5,
+  // },
+  // mapImage: {
+  //   position: 'absolute',
+  //   height: 70,
+  //   width: 70,
+  // },
   pedalTouchArea: {
     position: 'absolute',
     height: 70,

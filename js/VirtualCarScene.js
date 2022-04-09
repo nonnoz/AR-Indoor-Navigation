@@ -35,7 +35,7 @@ import renderIf from './renderIf';
 const carScale = .1; // this is the scale of the car
 
 // NOTE: make sure friction != drivingAcceleration!
-const maxSpeed = .19 * carScale; // m/s
+const maxSpeed = .12 * carScale; // m/s
 const drivingAcceleration = .08 * carScale; // m/s/s
 const reverseAcceleration = .17 * carScale; // m/s/s
 const friction = -.03 * carScale; // m/s/s

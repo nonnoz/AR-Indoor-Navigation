@@ -6,11 +6,11 @@ import { StyleSheet } from 'react-native';
 
 import {
     ViroARScene,
-    ViroMaterials,
-    ViroARPlaneSelector,
-    Viro3DObject,
-    ViroAnimations,
-    ViroText,
+    // ViroMaterials,
+    // ViroARPlaneSelector,
+    // Viro3DObject,
+    // ViroAnimations,
+    // ViroText,
 
 
 } from 'react-viro';
@@ -32,15 +32,13 @@ export default class Object extends Component {
     render() {
         const posList = [
             [0, 0, -100],
-            [50, 0, 0],
-            [0, 0, 50],
-            [-50, 0, 0]
+            [120, 0, 10],
+            [0, 0, 130],
+            [-150, 0, 30]
         ];
-        // const dirList = ["right", "left"]
-        const instructionList = ["Turn right", "Turn right", "Turn right", "Turn right"];
+        const instructionList = ["Turn right", "Turn right", "Turn right", "Arrive"];
         const rotList = [0, -90, -180, 90];
         const aniIdx = [0, 1, 0, 1];
-
 
         var arrows = [];
         for (var i = 0; i < posList.length; i++) {
@@ -64,23 +62,5 @@ export default class Object extends Component {
 
     }
 }
-
-
-// ViroMaterials.createMaterials({
-//     grid: {
-//         diffuseTexture: require('./res/material.png'),
-//     },
-//     green_mtl: {
-//         diffuseColor: "#0B6623",
-//         lightingModel: "PBR"
-//     },
-//     white_mtl: {
-//         diffuseColor: "#FFFFFF",
-//         lightingModel: "PBR"
-//     }
-// });
-
-
-
 
 module.exports = Object;

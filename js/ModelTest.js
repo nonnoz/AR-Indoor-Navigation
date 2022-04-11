@@ -77,13 +77,6 @@ export default class ModelTest extends Component {
 
 
 
-
-
-                {/* <ViroBox position={[0, -.5, -1]}
-                    animation={{ name: "rotate", run: true, loop: true }}
-                    scale={[.3, .3, .1]} materials={["grid"]} /> */}
-
-
             </ViroARScene>
         );
     }

@@ -6,6 +6,7 @@ import { StyleSheet } from 'react-native';
 
 import {
     ViroARScene,
+    ViroImage
     // ViroMaterials,
     // ViroARPlaneSelector,
     // Viro3DObject,
@@ -16,6 +17,9 @@ import {
 } from 'react-viro';
 
 import ArrowWithText from './ArrowWithText';
+
+var markerImage = require('./res/marker.png');
+
 
 export default class Object extends Component {
 
@@ -32,13 +36,15 @@ export default class Object extends Component {
     render() {
         const posList = [
             [0, 0, -100],
-            [120, 0, 10],
-            [0, 0, 130],
-            [-150, 0, 30]
+            [120, 0, 5],
+            [10, 0, 135],
+            // [-150, 0, 25]
         ];
-        const instructionList = ["Turn right", "Turn right", "Turn right", "Arrive"];
-        const rotList = [0, -90, -180, 90];
-        const aniIdx = [0, 1, 0, 1];
+        const instructionList = ["Turn right", "Turn right", "Turn right"];
+        const rotList = [0, -90, -180];
+        const aniIdx = [0, 1, 0];
+
+        const markerPos = [-100, 0, 23];
 
         var arrows = [];
         for (var i = 0; i < posList.length; i++) {
@@ -53,8 +59,21 @@ export default class Object extends Component {
         }
 
 
+
         return (
             <ViroARScene>
+            
+                <ViroImage
+                    // transformBehaviors={["billboard"]}
+                    width={10}
+                    height={13.5}
+                    opacity={1.0}
+                    scale={[0.5, 0.5, 0.5]}
+                    source={markerImage}
+                    position={markerPos}
+                    rotation={[0, 90, 0]}
+                />
+
                 {arrows}
 
             </ViroARScene>

@@ -35,8 +35,8 @@ import renderIf from './renderIf';
 const carScale = .1; // this is the scale of the car
 
 // NOTE: make sure friction != drivingAcceleration!
-// const maxSpeed = .075 * carScale; // m/s iphone
-const maxSpeed = .075 * carScale; // m/s ipad
+// const maxSpeed = .075 * carScale; // m/s, speed suitable for using iphone
+const maxSpeed = .075 * carScale; // m/s, speed suitable for using ipad
 const drivingAcceleration = .08 * carScale; // m/s/s
 const reverseAcceleration = .17 * carScale; // m/s/s
 const friction = -.03 * carScale; // m/s/s
@@ -123,9 +123,9 @@ export default class VirtualCarScene extends Component {
 
     let environmentLightSource = require('./res/car/learner_park_1k.hdr');
 
-        // we should pause the acceleration sound if we're not ready OR we're not either driving forward or backwards (2 & 8 bitmask)
-        let shouldPauseAccelSound = !this.state.isReady || !(this.props.arSceneNavigator.viroAppProps.direction & 10)
-        let shouldPauseIdleSound = !this.state.isReady || !shouldPauseAccelSound
+    // we should pause the acceleration sound if we're not ready OR we're not either driving forward or backwards (2 & 8 bitmask)
+    let shouldPauseAccelSound = !this.state.isReady || !(this.props.arSceneNavigator.viroAppProps.direction & 10)
+    let shouldPauseIdleSound = !this.state.isReady || !shouldPauseAccelSound
 
 
     return (

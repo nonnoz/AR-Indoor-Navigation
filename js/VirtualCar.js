@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import {
   Text,
   View,
@@ -59,7 +60,6 @@ export default class VirtualCar extends Component {
     this.getViroARView = this.getViroARView.bind(this);
     this.exitAR = this.exitAR.bind(this);
 
-    //this.getRecordingUI = this.getRecordingUI.bind(this);
     this.getReadyUI = this.getReadyUI.bind(this);
     this.ready = this.ready.bind(this);
     this.getInstructions = this.getInstructions.bind(this);
@@ -293,9 +293,6 @@ export default class VirtualCar extends Component {
     // ipad
     timeList = [6700, 14100, 46100, 26500, 1500];
 
-    // test timelist
-    // timeList = [5000, 5000, 5000, 5000, 80];
-    
     timeInterval = 1200;
     turnInterval = timeInterval + turnTime;
 

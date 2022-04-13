@@ -23,9 +23,6 @@ import {
 var joystickWidth = 200;
 var turnTime = 1740;
 
-/*
- * TODO: Add your API key below!!
- */
 var apiKey = "YOUR_API_KEY_HERE";
 export default class VirtualCar extends Component {
 
@@ -69,8 +66,6 @@ export default class VirtualCar extends Component {
     this.resetCar = this.resetCar.bind(this);
 
     this.getCarControls = this.getCarControls.bind(this);
-    // this.getDrivingPedals = this.getDrivingPedals.bind(this);
-    // this.getJoystick = this.getJoystick.bind(this);
     this.getResetButton = this.getResetButton.bind(this);
 
     this.getPressDown = this.getPressDown.bind(this);
@@ -114,7 +109,6 @@ export default class VirtualCar extends Component {
         {/* Get instructions and ready */}
         {this.getReadyUI()}
         {this.getInstructions()}
-
         {this.getMapDisplay()}
       </View>
     )
@@ -158,7 +152,6 @@ export default class VirtualCar extends Component {
           <Image style={styles.mapImage} source={require('./res/map/map_0.png')} />
         </View>
       );
-
     }
 
     if (this.state.mapIdx === 1) {
@@ -241,12 +234,8 @@ export default class VirtualCar extends Component {
         height: '100%', opacity: this.state.carControlsOpacity
       }}>
         {/* These are the controls to drive the car */}
-        {/* {this.getDrivingPedals()} */}
         {this.getStartButton()}
         {this.getMapButton()}
-
-        {/* {this.getResetButton()} */}
-        {/* {this.getJoystick()} */}
       </Animated.View>
     )
   }
@@ -256,7 +245,6 @@ export default class VirtualCar extends Component {
       <TouchableOpacity
         style={styles.startButton}
         onPress={this.startGuide}
-        // activeOpacity={0.6} 
         opacity={this.state.start ? 0 : 1}
       >
         <Image style={styles.startImage} source={require('./res/button/start_btn.png')} />
@@ -265,7 +253,6 @@ export default class VirtualCar extends Component {
   }
 
   getMapButton() {
-
     return (
       <TouchableOpacity
         style={styles.mapButton}
@@ -287,10 +274,10 @@ export default class VirtualCar extends Component {
   }
 
   startGuide() {
-    // iphone
-    // timeList = [7400, 16500, 50000, 28000, 80];
+    // driving time suitable for using iphone
+    // timeList = [7400, 16500, 50000, 28000, 1500];
 
-    // ipad
+    // driving time suitable for using ipad
     timeList = [6700, 14100, 46100, 26500, 1500];
 
     timeInterval = 1200;
@@ -298,6 +285,7 @@ export default class VirtualCar extends Component {
 
     setTimeout(this.getPressDown('up'), 10);
 
+    // total driving time
     setTimeout(this.getPressUp('up'), timeList[0] + timeList[1] + timeList[2] + timeList[3] + timeList[4]);
 
     setTimeout(() => {
@@ -354,7 +342,6 @@ export default class VirtualCar extends Component {
   }
 
   turnRight() {
-
     this.setState({
       left: false,
       right: true,
@@ -648,22 +635,24 @@ var styles = StyleSheet.create({
     width: 21,
     resizeMode: 'stretch',
   },
-  // iphone
-  // mapView: {
-  //   position: 'absolute',
-  //   height: 220,
-  //   width: 220,
-  //   marginTop: 25,
-  //   marginLeft: 5,
-  //   // bottom: 10,
-  //   left: 10,
-  // },
-  // mapImage: {
-  //   width: 220,
-  //   height: 220,
-  //   resizeMode: 'contain',
-  // },
-  // ipad
+  // map size suitable for using iphone
+  /*
+  mapView: {
+    position: 'absolute',
+    height: 220,
+    width: 220,
+    marginTop: 25,
+    marginLeft: 5,
+    // bottom: 10,
+    left: 10,
+  },
+  mapImage: {
+    width: 220,
+    height: 220,
+    resizeMode: 'contain',
+  },
+  */
+  // map size suitable for using ipad
   mapView: {
     position: 'absolute',
     height: 400,

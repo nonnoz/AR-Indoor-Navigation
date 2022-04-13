@@ -18,12 +18,8 @@ var createReactClass = require('create-react-class');
 var apiKey = "API_KEY_HERE";
 
 var arScenes = {
-
-    // 'VirtualCar': require('./js/VirtualCar.js'),
     'Object': require('./js/Object.js'),
-
 }
-
 
 var ViroCodeSamplesSceneNavigator = createReactClass({
     render: function () {
@@ -38,6 +34,5 @@ var ViroCodeSamplesSceneNavigator = createReactClass({
 });
 
 ViroCodeSamplesSceneNavigator = require('./js/VirtualCar');
-
 
 module.exports = ViroCodeSamplesSceneNavigator;

@@ -34,12 +34,20 @@ export default class Object extends Component {
 
 
     render() {
+        // iphone
+        // const posList = [
+        //     [0, 0, -100],
+        //     [120, 0, 5],
+        //     [10, 0, 135],
+        // ];
+
+        // ipad
         const posList = [
             [0, 0, -100],
             [120, 0, 5],
-            [10, 0, 135],
-            // [-150, 0, 25]
+            [5, 0, 180],
         ];
+
         const instructionList = ["Turn right", "Turn right", "Turn right"];
         const rotList = [0, -90, -180];
         const aniIdx = [0, 1, 0];

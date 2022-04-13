@@ -20,7 +20,7 @@ import {
 } from 'react-viro';
 
 var joystickWidth = 200;
-var turnTime = 1735;
+var turnTime = 1740;
 
 /*
  * TODO: Add your API key below!!
@@ -287,8 +287,14 @@ export default class VirtualCar extends Component {
   }
 
   startGuide() {
-    // timeList = [7400, 20000, 50000, 28000, 80];
-    timeList = [5000, 5000, 5000, 5000, 80];
+    // iphone
+    // timeList = [7400, 16500, 50000, 28000, 80];
+
+    // ipad
+    timeList = [6700, 14100, 46100, 26500, 1500];
+
+    // test timelist
+    // timeList = [5000, 5000, 5000, 5000, 80];
     
     timeInterval = 1200;
     turnInterval = timeInterval + turnTime;
@@ -645,18 +651,34 @@ var styles = StyleSheet.create({
     width: 21,
     resizeMode: 'stretch',
   },
+  // iphone
+  // mapView: {
+  //   position: 'absolute',
+  //   height: 220,
+  //   width: 220,
+  //   marginTop: 25,
+  //   marginLeft: 5,
+  //   // bottom: 10,
+  //   left: 10,
+  // },
+  // mapImage: {
+  //   width: 220,
+  //   height: 220,
+  //   resizeMode: 'contain',
+  // },
+  // ipad
   mapView: {
     position: 'absolute',
-    height: 220,
-    width: 220,
+    height: 400,
+    width: 400,
     marginTop: 25,
     marginLeft: 5,
     // bottom: 10,
     left: 10,
   },
   mapImage: {
-    width: 220,
-    height: 220,
+    width: 400,
+    height: 400,
     resizeMode: 'contain',
   },
   joystickTouchArea: {

@@ -56,14 +56,14 @@ buck-out/
 *.jsbundle
 
 # Sample
-android/
-ios/
+# android/
+# ios/
 .buckconfig
 .flowconfig
 .gitattributes
 .watchmanconfig
-index.android.js
-index.ios.js
+# index.android.js
+# index.ios.js
 babel.config.js
 metro.config.js
 yarn.lock

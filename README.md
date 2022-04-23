@@ -5,7 +5,7 @@ The software built for this project uses Viro React as the augmented reality (AR
 ## Instructions for setting up the environment and running project code using Testbed app
 
 1. Follow directions on our Quick Start Guide ([Mac/Linux](https://viro-community.readme.io/docs/quick-start-maclinux)) ([Windows](https://viro-community.readme.io/docs/quick-start-windows)) to setup dependencies.
-2. Go into the AR-Indoor-Navigation directory.
+2. Go into the AR-Indoor-Navigation-master directory.
 3. Run `npm install` or `yarn install` if using `yarn` from the root of this project to install the `node` modules.
 4. Download the Viro Testbed app, for iOS [here](https://itunes.apple.com/us/app/viro-media/id1163100576?mt=8), or for Android [here](https://play.google.com/store/apps/details?id=com.viromedia.viromedia&hl=en).
 5. Run `npm start` from the root of this project.

@@ -14,6 +14,8 @@ The software built for this project uses Viro React as the augmented reality (AR
 8. Enter the ngrok url or the IP address of the running device into the empty text field on the Testbed screen and press "Go".
 9. Now the application should be presented, enjoy!
 
+
+
 ### Changing between navigation methods
 
 There are three navigation methods implemented in this project. The second method and third method are included in one file.
@@ -31,6 +33,8 @@ There are three navigation methods implemented in this project. The second metho
 
 \* To reload the application, try shaking the device until a development menu appears and click "Reload".
 
+
+
 ### Application scenario
 
 The set route of this application is located at the 4th floor of the Sir Peter Mansfield Building (PMB) in the University of Nottingham Ningbo China (UNNC). The start point is elevator at the 4th floor, and the destination is PMB 447.
@@ -39,3 +43,16 @@ The set route of this application is located at the 4th floor of the Sir Peter M
 User should stand at the specific start point when start the application. <br>
 **Testing the second and third method**<br>
 The start point could be anywhere. For the best guidance experience, the virtual car need to be placed at the middle of the road and level with the elevator.<br>
+
+
+
+### Device specification
+
+The code now is suitable for using iPad. It also provide iPhone setting. 
+
+**To modify from iPad setting to iPhone:**
+
+1. Open the project in a texteditor such as Visual Studio Code.
+2. Search "iPhone", find places that need to be modified.
+3. Comment and uncomment corresponding code.
+4. Reload/restart the application.
